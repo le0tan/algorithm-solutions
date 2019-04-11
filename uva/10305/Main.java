@@ -1,12 +1,15 @@
 import java.util.*;
 
 public class Main {
+
+  public static List< List<Integer> > g;
+
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in);
 		while(true) {
 			int n=sc.nextInt(), m=sc.nextInt();
 			if(n==0&&m==0) break;
-			List< List<Integer> > g = new ArrayList<>();
+			g = new ArrayList<>();
 			int[] in = new int[n+1];
 			for(int i=0;i<=n;i++) g.add(new ArrayList<>());
 			for(int i=0;i<m;i++) {
@@ -15,25 +18,11 @@ public class Main {
 				g.get(a).add(b);
 				in[b]++;
 			}
-			List<Integer> res = new ArrayList<>();
-			boolean[] vis = new boolean[n+1];
-			for(int i=1;i<=n;i++) {
-				if(in[i]==0 && !vis[i]) {
-					Queue<Integer> q = new ArrayDeque<>();
-					q.add(i);
-					vis[i] = true;
-					while(!q.isEmpty()) {
-						int cur = q.poll();
-						res.add(cur);
-						for(Integer t: g.get(cur)) {
-							if(!vis[t]) {
-								q.add(t);
-								vis[t] = true;
-							}
-						}
-					}
-				}
-			}
+      List<Integer> res = new ArrayList<>();
+      boolean[] vis = new boolean[n+1];
+      for(int i=1;i<=n;i++) if(!vis[i]) dfs(i,vis,res);
+      Collections.reverse(res);
+
 			if(res.size()>0) {
 				System.out.print(res.get(0));
 				for(int i=1;i<res.size();i++)
@@ -42,4 +31,11 @@ public class Main {
 			}
 		}
 	}
+  private static void dfs(int n, boolean[] vis, List<Integer> res) {
+    vis[n] = true;
+    for(Integer i: g.get(n)) {
+      if(!vis[i]) dfs(i,vis,res);
+    }
+    res.add(n);
+  }
 }
